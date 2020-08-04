@@ -11,5 +11,9 @@ Simply output the encrypted string of "we found a treasure!" The cipher is repla
 corresponding position from the end of the alphabet. (i.e. a->z, b->y...y->b, z->a)
 
 ##### Stage 2: Knowledge is key
-Get input of a string, and a key (an integer). Use the key to encode the string using the Caesar cipher. This cipher
-steps forward in the alphabet by the number of letters specified in the key, wrapping around from `z` to `a`.
+Get input of a string, and a key (an integer). Use the key to encode the string using the Caesar cipher which rotates all
+letters forward _x_ amount of letters, wrapping around from z to a.
+
+##### Stage 3: Decrypted!
+Read three lines of input: a target operation, a message or ciphertext, and a key to use to encrypt or decrypt the 
+message. All non-letter characters are to be shifted as well as letters.
