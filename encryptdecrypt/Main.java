@@ -1,5 +1,8 @@
 package encryptdecrypt;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.StringBuilder;
 
 public class Main {
@@ -7,6 +10,8 @@ public class Main {
         String command = "enc";
         String message = "";
         int    key     = 0;
+        String input   = "";
+        String output  = "";
 
         int index = 0;
         while (index < args.length) {
@@ -19,6 +24,15 @@ public class Main {
                     break;
                 case "-data":
                     message = args[++index];
+                    input = "line";
+                    break;
+                case "-in":
+                    if (input.isBlank()) {
+                        input = args[++index];
+                    }
+                    break;
+                case "-out":
+                    output = args[++index];
                     break;
                 default:
                     break;
@@ -26,20 +40,36 @@ public class Main {
             ++index;
         }
 
-        takeAction(command, message, key);
+        if (!(input.isBlank() || input.equals("line"))) {
+           message = readFile(input);
+        }
+
+        if (message == null) {
+            return;
+        }
+
+        String result = takeAction(command, message, key);
+
+        if (result == null) {
+            return;
+        }
+
+        if (output.isBlank()) {
+            System.out.println(result);
+        } else {
+            writeFile(output, result);
+        }
     }
 
-    private static void takeAction(String command, String message, int key) {
+    private static String takeAction(String command, String message, int key) {
         switch (command) {
             case "enc":
-                System.out.println(encode(message, key));
-                break;
+                return encode(message, key);
             case "dec":
-                System.out.println(decode(message, key));
-                break;
+                return decode(message, key);
             default:
-                System.out.println("Unknown command.");
-                break;
+                System.out.println("Error: Unknown -mode.");
+                return null;
         }
     }
 
@@ -75,4 +105,26 @@ public class Main {
         return encoded.toString();
     }
 
+    private static String readFile(String infile) {
+        try (FileInputStream data = new FileInputStream(infile)) {
+            StringBuilder msg = new StringBuilder();
+            for (int line = data.read(); line != -1; line = data.read()) {
+                msg.append((char) line);
+            }
+            return msg.toString();
+        } catch (IOException e) {
+            System.out.println("Error: file not found");
+            return null;
+        }
+    }
+
+    private static void writeFile(String outfile, String message) {
+        try (FileOutputStream out = new FileOutputStream(outfile)) {
+            for (char ch : message.toCharArray()) {
+                out.write(ch);
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+    }
 }

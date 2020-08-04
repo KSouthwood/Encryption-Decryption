@@ -20,6 +20,14 @@ message. All non-letter characters are to be shifted as well as letters.
 
 ##### Stage 4: I command you
 Modify the program to now work with command-line arguments instead of standard input. The arguments will be `-mode`,
-`-key` and `-data`. These will supply the programs mode (`enc` or `dec`), the key used to modify the message, and the
+`-key` and `-data`. These will supply the programs' mode (`enc` or `dec`), the key used to modify the message, and the
 string to be encrypted or decrypted. The program should assume some defaults in case an argument doesn't get passed, or
 is wrong. `enc` for the mode, `0` for the key, and `""` (empty string) for the data.
+
+##### Stage 5: X-files
+Add the ability to read from/write to files. The program must now parse two additional arguments (`-in` and `-out`) to
+specify the names of files to read or write. In addition to prior defaults, the program writes to standard output if
+no `-out` argument is provided, as well as using the `-data` argument if both `-data` and `-in` are given.
+
+If there are errors of any kind, output a clear message describing the problem and stop successfully. The message should
+contain the word "Error" in any case.
