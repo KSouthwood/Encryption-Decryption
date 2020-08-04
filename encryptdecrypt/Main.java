@@ -1,20 +1,35 @@
 package encryptdecrypt;
 
-import java.util.Scanner;
 import java.lang.StringBuilder;
 
 public class Main {
     public static void main(String[] args) {
-        getInputs();
+        String command = "enc";
+        String message = "";
+        int    key     = 0;
+
+        int index = 0;
+        while (index < args.length) {
+            switch (args[index]) {
+                case "-mode":
+                    command = args[++index];
+                    break;
+                case "-key":
+                    key = Integer.parseInt(args[++index]);
+                    break;
+                case "-data":
+                    message = args[++index];
+                    break;
+                default:
+                    break;
+            }
+            ++index;
+        }
+
+        takeAction(command, message, key);
     }
 
-    private static void getInputs() {
-        Scanner input = new Scanner(System.in);
-
-        String command = input.nextLine();
-        String message = input.nextLine();
-        int    key     = input.nextInt();
-
+    private static void takeAction(String command, String message, int key) {
         switch (command) {
             case "enc":
                 System.out.println(encode(message, key));

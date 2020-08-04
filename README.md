@@ -15,5 +15,11 @@ Get input of a string, and a key (an integer). Use the key to encode the string 
 letters forward _x_ amount of letters, wrapping around from z to a.
 
 ##### Stage 3: Decrypted!
-Read three lines of input: a target operation, a message or ciphertext, and a key to use to encrypt or decrypt the 
+Read three lines of input: a target operation, a message or ciphertext, and a key to use for encrypting or decrypting the 
 message. All non-letter characters are to be shifted as well as letters.
+
+##### Stage 4: I command you
+Modify the program to now work with command-line arguments instead of standard input. The arguments will be `-mode`,
+`-key` and `-data`. These will supply the programs mode (`enc` or `dec`), the key used to modify the message, and the
+string to be encrypted or decrypted. The program should assume some defaults in case an argument doesn't get passed, or
+is wrong. `enc` for the mode, `0` for the key, and `""` (empty string) for the data.
