@@ -1,21 +1,20 @@
 package encryptdecrypt;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.StringBuilder;
-
 public class Main {
     public static void main(String[] args) {
+        String algorithm = "shift";
         String command = "enc";
         String message = "";
-        int    key     = 0;
-        String input   = "";
-        String output  = "";
+        int key = 0;
+        String input = "";
+        String output = "";
 
         int index = 0;
         while (index < args.length) {
             switch (args[index]) {
+                case "-alg":
+                    algorithm = args[++index];
+                    break;
                 case "-mode":
                     command = args[++index];
                     break;
@@ -40,91 +39,22 @@ public class Main {
             ++index;
         }
 
-        if (!(input.isBlank() || input.equals("line"))) {
-           message = readFile(input);
-        }
+        Translator algo;
 
-        if (message == null) {
-            return;
-        }
-
-        String result = takeAction(command, message, key);
-
-        if (result == null) {
-            return;
-        }
-
-        if (output.isBlank()) {
-            System.out.println(result);
-        } else {
-            writeFile(output, result);
-        }
-    }
-
-    private static String takeAction(String command, String message, int key) {
-        switch (command) {
-            case "enc":
-                return encode(message, key);
-            case "dec":
-                return decode(message, key);
-            default:
-                System.out.println("Error: Unknown -mode.");
-                return null;
-        }
-    }
-
-    private static String encodeCaesar(String encode, int key) {
-        StringBuilder encoded = new StringBuilder();
-        
-        for (char letter : encode.toCharArray()) {
-            if (Character.isLetter(letter)) {
-                encoded.append((char) ((((letter - 'a') + key) % 26) + 'a'));
+        if (algorithm.equals("unicode")) {
+            if (command.equals("enc")) {
+                algo = new UnicodeEncode(message, input, output, key);
             } else {
-                encoded.append(letter);
+                algo = new UnicodeDecode(message, input, output, key);
+            }
+        } else {
+            if (command.equals("enc")) {
+                algo = new CaesarEncode(message, input, output, key);
+            } else {
+                algo = new CaesarDecode(message, input, output, key);
             }
         }
-        
-        return encoded.toString();
-    }
 
-    private static String encode(String msg, int key) {
-        StringBuilder encoded = new StringBuilder();
-        for (char ch : msg.toCharArray()) {
-            encoded.append((char) (ch + key));
-        }
-
-        return encoded.toString();
-    }
-
-    private static String decode(String msg, int key) {
-        StringBuilder encoded = new StringBuilder();
-        for (char ch : msg.toCharArray()) {
-            encoded.append((char) (ch - key));
-        }
-
-        return encoded.toString();
-    }
-
-    private static String readFile(String infile) {
-        try (FileInputStream data = new FileInputStream(infile)) {
-            StringBuilder msg = new StringBuilder();
-            for (int line = data.read(); line != -1; line = data.read()) {
-                msg.append((char) line);
-            }
-            return msg.toString();
-        } catch (IOException e) {
-            System.out.println("Error: file not found");
-            return null;
-        }
-    }
-
-    private static void writeFile(String outfile, String message) {
-        try (FileOutputStream out = new FileOutputStream(outfile)) {
-            for (char ch : message.toCharArray()) {
-                out.write(ch);
-            }
-        } catch (IOException e) {
-            System.out.println("Error: " + e);
-        }
+        algo.doWork();
     }
 }

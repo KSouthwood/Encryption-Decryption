@@ -31,3 +31,12 @@ no `-out` argument is provided, as well as using the `-data` argument if both `-
 
 If there are errors of any kind, output a clear message describing the problem and stop successfully. The message should
 contain the word "Error" in any case.
+
+##### Stage 6: Choices, choices
+Upgrade the program to now take an additional command line argument: `-alg`. This one lets you specify which cipher
+algorithm to use, either `shift` (otherwise known as Caesar) or `unicode` (simply shift all characters). The program
+should default to `shift` if no algorithm was specified.
+
+At the same time, refactor the program into a set of classes and interfaces for the encryption and decryption algorithms.
+The lessons covered several of potential use, and a website was given in comments of much value: 
+[Refactoring Guru](https://refactoring.guru).
